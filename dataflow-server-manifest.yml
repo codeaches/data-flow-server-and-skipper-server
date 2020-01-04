@@ -1,0 +1,30 @@
+---
+applications:
+- name: dataflow-server
+  random-route: true
+  memory: 2G
+  disk_quota: 2G
+  instances: 1
+  path: spring-cloud-dataflow-server-2.3.0.RELEASE.jar
+  buildpack: java_buildpack
+  routes:
+  - route: my-codeaches-scdf-server.cfapps.io
+  env:
+    SPRING_APPLICATION_NAME: dataflow-server
+    JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 13.+ } }'
+
+    SPRING_PROFILES_ACTIVE: cloud
+    JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}'
+
+    SPRING_CLOUD_SKIPPER_CLIENT_SERVER_URI: https://my-codeaches-skipper-server.cfapps.io/api
+
+    SPRING_APPLICATION_JSON: '{"maven":{"remote-repositories":{"repo1":{"url":"https://repo.spring.io/libs-release"},"repo2":{"url":"https://oss.sonatype.org/content/repositories/snapshots"},"repo3":{"url":"https://oss.sonatype.org/content/repositories/releases"}}}}'
+
+    security.basic.enabled: true
+    security.user.name: user001
+    security.user.password: pass001
+    security.user.role: VIEW,CREATE,MANAGE
+
+  services:
+    - my_mysql
+    - my_redis
